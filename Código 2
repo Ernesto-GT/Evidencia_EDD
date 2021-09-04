@@ -1,0 +1,221 @@
+#include <iostream>
+#include <fstream>
+#include <conio.h>
+
+using namespace std;
+
+struct Node{
+	int 	id;
+	char 	producto[30];
+	double 	precio;
+	char	categoria[20];
+	Node	*ant;
+	Node	*sig;
+};
+
+class LinkedList{
+	private:
+		Node * first = 0;
+		Node * last = 0;
+		char * file;
+		int seed = 100;
+		short incr = 10;
+		
+	public:
+		LinkedList(char *file){
+			this->file - file;
+			ifstream archivito;
+			Node *aux = NULL;
+			archivito.open(file, ios::binary);
+			if(archivito.is_open()){
+				//leer del archivo cada cierto número de bytes
+				aux = new Node;
+				archivito.read((char*)aux, sizeof(Node));
+				while(!archivito.eof()){
+					//y agregarlos a la lista ligada
+					AddNode(aux, 1);
+					aux - new Node;
+					archivito.read((char*)caux, sizeof(Node));
+				}
+				archivito.close();
+			}
+		}
+		~LinkedList(){
+			ofstream archivito;
+			archivito.open(file, ios::binary);
+			Node *aux = 0, *aux2 = 0;
+			if(archivito.is_open()){
+				aux - first;
+				while(aux!-0){
+					//escribir en el archivo cada nodo aux
+					archivito.write((char*)aux, sizeof(Node));
+					aux2 = aux;
+					aux = aux->sig;
+					delete aux2;
+				}
+				archivito.close();
+			} 
+		}
+		Node *getFirst(){
+			return first;
+		}
+		Node *getLast(){
+			return last;
+		}
+		
+		void AddNode(Node *nuevo, short source)
+		//Source = 1, viene de archivo,
+		//Source = 0, se captura de pantalla
+		{
+			nuevo->ant = 0;
+			nuevo->sig = 0;
+			if(source == 0){
+				nuevo->id = seed + incr;
+				seed += incr;
+			}
+			else{
+				seed = nuevo->id;
+			}
+			
+			if(first == 0){
+				nuevo->id - seed;
+				first - last - nuevo;
+			}
+			else{
+				last->sig = nuevo;
+				nuevo->ant = last;
+				last = nuevo;
+			}
+		}
+		
+		void DeleteNode(Node *temp){
+			if(first -- temp){
+				first - temp->sig;
+				if(temp->sig !- 0)
+					temp->sig->ant = 0;
+			}
+			else{
+				temp->ant->sig = temp->sig;
+				if(temp->sig != 0)
+					temp->sig->ant = temp->ant;
+			}
+			delete temp;
+		}
+		
+		//Busqueda Secuencial por id
+		Node *SearchNode(int ID){
+			Node *aux = 0;
+			bool siloencontre = false;
+			aux = first;
+			while(aux != 0){
+				if(ID == aux->id){
+					siloencontre = true;
+					break;
+				}
+				aux - aux->sig;
+			}
+			if(siloencontre)
+				return aux;
+			else
+				return 0;
+		}
+};
+
+void CapturaDatos(Node *temp);
+void MuestraDatos(Node *temp);
+
+int main(){
+	Node *aux - 0, *nuevo - 0;
+	int opc = 0, opc2 = 0;
+	Node Temp;
+	char archi[] = "productos.dat";
+	
+	LinkedList Lista_Productos(archi);
+	
+	do{
+		system("cls");
+		printf("<<GESTION DE PRODUCTOS>> \n");
+		printf("1. Agregar Producto\n");
+		printf("2. Buscar por Id (Secuencial)\n");
+		printf("3. Mostrar lista de productos\n");
+		printf("4. Buscar por Producto (Binaria)\n");
+		printf("5. Ordenar por Producto (_Sort)\n");
+		printf("6. Ordenar por Precio (_Sort)\n");
+		printf("7. Salir\n");
+		cin >> opc;
+		switch(opc){
+			case 1:
+				system("cls");
+				printf("Agregar PRODUCTO\n");
+				nuevo = new Node;
+				nuevo->id = 0;
+				CapturaDatos(nuevo);
+				Lista_Productos.AddNode(nuevo, 0);
+				printf("\nDatos agregados");
+				_getch();
+				break;
+			case 2:
+				system("cls");
+				printf("Buscar Producto por ID\n");
+				printf("Id: "); cin >> Temp.id;
+				aux = Lista_Productos.SearchNode(Temp.id);
+				if(aux != 0){//Si se encuentra el dato
+					printf("Datos encontrados:\n");
+					MuestraDatos(aux);
+					
+					printf("Desea:\n 0) Regresar 1) Modificar 2) Eliminar: "); cin >> opc2;
+					switch(opc2){
+						case 1: //modificar
+						{
+							CapturaDatos(aux);
+							printf("El id-producto %d fue modificado\n", aux->id);
+							break;
+						}
+						case 2: //eliminar
+						{
+							printf("El producto %s fue eliminado\n", aux->producto);
+							Lista_Productos.DeleteNode(aux);
+							_getch();
+							break;
+						}
+						default:
+							printf("Gracias por participar");
+							break;
+					}
+				}
+				else
+					printf("Dato NO Encontrado");
+				_getch();
+				break;
+			case 3:
+				system("cls");
+				printf("ID\tPRODUCTO\t\tPRECIO\t\tCATEGORIA\n");
+				aux = Lista_Productos.getFirst();
+				while(aux != 0){
+					printf("%d\t%s\t\t%10.2lf\t\t%s\n",aux->id, aux->producto, aux->precio, aux->categoria);
+					aux = aux->sig;
+				}
+				_getch();
+				break;
+			case 4:
+				break;
+		}
+	
+	}while(opc<7);
+	
+	printf("\a");
+	_getch();
+}
+
+void CapturaDatos(Node *temp){
+	cout << "Producto: "; 	cin >> temp->producto;
+	cout << "Precio: ";		cin >> temp->precio;
+	cout << "Categoria: ";	cin >> temp->categoria;
+}
+
+void MuestraDatos(Node *temp){
+	//printf("Id:\t%d\n",			temp->id);
+	printf("Producto:\t%s\n",	temp->producto);
+	printf("Precio:\t%10.2lf\n",	temp->precio);
+	printf("Categoria:\t%s\n", temp->categoria);
+}
