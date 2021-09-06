@@ -5,13 +5,14 @@
 
 using namespace std; 	// Para abreviar el uso de comandos de entrada y salida
 
+//estructura llamada Nodo para guardar los productos de nuestra lista
 struct Node{
-	int 	id; 
-	char 	producto[30];
-	double 	precio;
-	char	categoria[20];
-	Node	*ant;
-	Node	*sig;
+	int 	id;            //id del producto
+	char 	producto[30];  //nombre del producto
+	double 	precio;        //precio del producto
+	char	categoria[20]; //categoria del producto
+	Node	*ant;          //apuntador hacia el Nodo del producto anterior
+	Node	*sig;          //apuntador hacia el Nodo del producto siguiente
 };
 
 class LinkedList{
