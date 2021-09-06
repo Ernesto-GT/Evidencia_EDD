@@ -1,125 +1,125 @@
-//Programa que enlista productos de un supermercado con sus precios, tipo y código identificador
-#include <iostream>	//Librería para datos de entrada y salida
-#include <fstream>	//Librería para poder leer en ficheros o escribir en estos
-#include <conio.h>	//Librería usada para dar presentación al texto en la consola
+#include <iostream>
+#include <fstream>
+#include <conio.h>
 
-using namespace std; 	// Para abreviar el uso de comandos de entrada y salida
+using namespace std;
 
-//estructura llamada Nodo para guardar los productos de nuestra lista
 struct Node{
-	int 	id;            //id del producto
-	char 	producto[30];  //nombre del producto
-	double 	precio;        //precio del producto
-	char	categoria[20]; //categoria del producto
-	Node	*ant;          //apuntador hacia el Nodo del producto anterior
-	Node	*sig;          //apuntador hacia el Nodo del producto siguiente
+	int 	id;
+	char 	producto[30];
+	double 	precio;
+	char	categoria[20];
+	Node	*ant;
+	Node	*sig;
 };
 
+//Clase para generar la lista que contiene todos los productos del supermercado
 class LinkedList{
-	private:
-		Node * first = 0;
-		Node * last = 0;
-		char * file;
-		int seed = 100;
-		short incr = 10;
+	private: 	//Los atributos de la lista se mantienen privados con su respectivo modificador de acceso para darles más seguridad 
+		Node * first = 0; 	//Se genera una estructura de tipo apuntador para guardar la dirección de memoria del primer nodo
+		Node * last = 0;	//Se genera una estructura de tipo apuntador para guardar la dirección de memoria del último nodo
+		char * file;		//Nodo usado después para generar el archivo donde se escribirá la información
+		int seed = 100;		//Atributo usado para dar su respectivo código a cada producto
+		short incr = 10;	//Atributo usado para dar el incremento con respecto al código del producto anterior
 		
 	public:
-		LinkedList(char *file){
-			this->file = file;
-			ifstream archivito;
-			Node *aux = NULL;
-			archivito.open(file, ios::binary);
+		//Constructor usada para agregar a la lista mostrada en consola aquellos artículos que ya habían sido agregados a la lista del archivo
+		LinkedList(char *file){		//Como parámetro se usa el archivo de la lista
+			this->file = file;		//Se especifica que el archivo que se va a usar es el del parámetro que se mandó
+			ifstream archivito;		//Se declara el nombre del archivo que se usará
+			Node *aux = NULL;		//Se genera un nodo auxiliar que será el mensajero para traer la información de la lista del archvio a la del programa
+			archivito.open(file, ios::binary);	//Se abre el programa de manera binaria
 			if(archivito.is_open()){
 				//leer del archivo cada cierto número de bytes
-				aux = new Node;
-				archivito.read((char*)aux, sizeof(Node));
-				while(!archivito.eof()){
-					//y agregarlos a la lista ligada
-					AddNode(aux, 1);
+				aux = new Node;		//Se establece que la variable auxiliar tendrá un espacio de memoria dinámico
+				archivito.read((char*)aux, sizeof(Node));	//Se lee el archivo fila por fila y se guarda la información en la variable auxiliar
+				while(!archivito.eof()){	//Este while nos ayudará a movernos hasta llegar al final del archivo
+					//y agrega los datos que ya se tenían a la lista ligada
+					AddNode(aux, 1);	
 					aux = new Node;
-					archivito.read((char*)aux, sizeof(Node));
+					archivito.read((char*)aux, sizeof(Node)); //Se repite el proceso antes del while desde la línea anterior y en ésta
 				}
-				archivito.close();
+				archivito.close();	//Se cierra el archvivo
 			}
 		}
-		~LinkedList(){
-			ofstream archivito;
-			archivito.open(file, ios::binary);
-			Node *aux = 0, *aux2 = 0;
-			if(archivito.is_open()){
-				aux = first;
+		~LinkedList(){	//Se genera un override del constructor anterior
+			ofstream archivito;	//Se declara el nombre del archivo que se usará
+			archivito.open(file, ios::binary);	//Se abre el archivo para futuras operaciones
+			Node *aux = 0, *aux2 = 0;	//Se declaran dos variables auxiliares del tipo estructura Nodo
+			if(archivito.is_open()){	
+				aux = first;	//La primera auxiliar se iguala al primer elemento de la lista
 				while(aux!=0){
-					//escribir en el archivo cada nodo aux
-					archivito.write((char*)aux, sizeof(Node));
-					aux2 = aux;
-					aux = aux->sig;
-					delete aux2;
+					//escribir en el archivo cada nodo aux	
+					archivito.write((char*)aux, sizeof(Node));	//Se escribe en el archivo los nuevos elementos de la lista
+					aux2 = aux;			//Se asignan los elementos de aux a aux2
+					aux = aux->sig;		//Mientras que aux no apunte a NULL o 0, éste seguirá moviéndose a través de la lista
+					delete aux2;		//Se elimina el espacio de memoria a donde aux2 apuntaba
 				}
-				archivito.close();
+				archivito.close(); //Se cierra el archivo
 			} 
 		}
-		Node *getFirst(){
+		Node *getFirst(){	//Función para obtener el atributo first declarado arriba como privado
 			return first;
 		}
-		Node *getLast(){
+		Node *getLast(){	//Función para obtener el atributo last declarado arriba como privado
 			return last;
 		}
 		
-		void AddNode(Node *nuevo, short source)
+		void AddNode(Node *nuevo, short source)	//Método usado para agregar nodos del archivo a la lista ligada del programa ejecutándose
 		//Source = 1, viene de archivo,
 		//Source = 0, se captura de pantalla
 		{
-			nuevo->ant = 0;
-			nuevo->sig = 0;
-			if(source == 0){
+			nuevo->ant = 0; 	//El campo apuntador de nodo anterior del nodo que se está leyendo se apunta a nulo
+			nuevo->sig = 0;		//El campo apuntador de nodo siguiente del nodo que se está leyendo se apunta a nulo
+			if(source == 0){	//Si se ingresa desde la consola el nuevo elemento, este if hace que el siguiente elemento tenga un código distinto al anterior (+10)
 				nuevo->id = seed + incr;
 				seed += incr;
 			}
 			else{
-				seed = nuevo->id;
+				seed = nuevo->id;	//Si viene desde el archivo, entonces simplemente se guarda como está
 			}
 			
-			if(first == 0){
+			if(first == 0){		//Si es el primer elemento que se ingresará, entonces se le asignará el código para ese producto y tanto el primer como último elemento será igual al que se ingresó
 				nuevo->id = seed;
 				first = last = nuevo;
 			}
 			else{
-				last->sig = nuevo;
-				nuevo->ant = last;
-				last = nuevo;
+				last->sig = nuevo; //Si no es el primero entonces el apuntador de siguiente de last apuntará al nuevo nodo
+				nuevo->ant = last;	//El nodo (su apuntador al anterior) apuntará al que estaba antes del último
+				last = nuevo;	//Se declara que el último elemento es igual al nuevo nodo ingresado
 			}
 		}
 		
-		void DeleteNode(Node *temp){
-			if(first == temp){
-				first = temp->sig;
-				if(temp->sig != 0)
-					temp->sig->ant = 0;
+		void DeleteNode(Node *temp){	//Método para eliminar nodo
+			if(first == temp){		//Si el primer elemento es igual al temporal entonces...
+				first = temp->sig;	//El apuntador al primer elemento ahora cambiará a apuntar al segundo
+				if(temp->sig != 0)	//Si el siguiente elemento es diferente de nulo
+					temp->sig->ant = 0;	//Tanto apuntador siguiente como anterior del nodo serán igual a 0 o nulo
 			}
-			else{
-				temp->ant->sig = temp->sig;
-				if(temp->sig != 0)
-					temp->sig->ant = temp->ant;
+			else{	//S no es el primer elemento
+				temp->ant->sig = temp->sig;	//Tanto el campo anterior como el siguiente serán iguales al siguiente elemento
+				if(temp->sig != 0)	//Si el apuntador no se dirge a nulo
+					temp->sig->ant = temp->ant;	//El apuntador siguiente del nodo anterior ahora apuntará al anterior
 			}
-			delete temp;
+			delete temp;	//Se elimina el espacio de memoria del nodo temporal
 		}
 		
 		//Busqueda Secuencial por id
-		Node *SearchNode(int ID){
-			Node *aux = 0;
-			bool siloencontre = false;
-			aux = first;
-			while(aux != 0){
-				if(ID == aux->id){
-					siloencontre = true;
-					break;
+		Node *SearchNode(int ID){	//Esta función realiza la busqueda y como parámetro usa el ID del producto
+			Node *aux = 0;	//Se crea un nodo auxiliar y se apunta a nul
+			bool siloencontre = false;	//Declaración de una variable que se usará después
+			aux = first;	//Se iguala el auxiliar al primer elemento de la lista
+			while(aux != 0){	//Mientras que el auxiliar sea diferente nulo...
+				if(ID == aux->id){	//Si coinciden los códigos...
+					siloencontre = true;	//Se encontró el proucto buscaro
+					break; //Termina el while
 				}
-				aux = aux->sig;
+				aux = aux->sig;	//Operación usada para moverse por la lista
 			}
-			if(siloencontre)
-				return aux;
-			else
-				return 0;
+			if(siloencontre)	//En dado caso de que se encontrara el ID..
+				return aux;		//Se regresa el nodo al cual pertenece ese ID
+			else	//Si no...
+				return 0;	//No regresa más que un valor nulo
 		}
 };
 
