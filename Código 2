@@ -216,7 +216,7 @@ int main(){
 		
 	}while(opc<7); //mientras siguamos eligiendo una opcion valida en el menu continuaremos con el programa hasta que ingresemos uno distinto
 	
-	printf("\a");
+	printf("\a"); //realizamos un sonido para que el usuario sepa que ha terminado el programa
 	_getch();     //esperamos a que el usuario continue para finalizar el codigo
 }
 
