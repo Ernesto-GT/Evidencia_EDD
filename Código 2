@@ -123,18 +123,21 @@ class LinkedList{
 		}
 };
 
+//se ingresan las cabeceras de dos funciones que se especifican mas adelante para capturar y mostrar los productos
 void CapturaDatos(Node *temp);
 void MuestraDatos(Node *temp);
 
+//funcion principal del programa
 int main(){
-	Node *aux = 0, *nuevo = 0;
-	int opc = 0, opc2 = 0;
-	Node Temp;
-	char archi[] = "productos.dat";
+	Node *aux = 0, *nuevo = 0;         //se igualan a cero los nodos auxiliar y nuevo
+	int opc = 0, opc2 = 0;             //se declaran dos enteros para saber las opciones que el usuario elige a traves del menú
+	Node Temp;                         //se declara un nodo temporal
+	char archi[] = "productos.dat";    //se ingresa el nombre del archivo binario en el cual se trabajara 
 	
-	LinkedList Lista_Productos(archi);
+	LinkedList Lista_Productos(archi); //se declara una nueva lista llamada Lista_productos a traves del constructor y utilizando el archivo nombrado anteriormente
 	
 	do{
+			//se limpia la consola y se imprime el menú de opciones a realizar con la lista de productos
 		system("cls");
 		printf("<<GESTION DE PRODUCTOS>> \n");
 		printf("1. Agregar Producto\n");
@@ -144,43 +147,46 @@ int main(){
 		printf("5. Ordenar por Producto (_Sort)\n");
 		printf("6. Ordenar por Precio (_Sort)\n");
 		printf("7. Salir\n");
-		cin >> opc;
+		cin >> opc;    //se registra la seleccion del usuario y luego se utiliza un switch para cada caso del menú
 		switch(opc){
 			case 1:
-				system("cls");
-				printf("Agregar PRODUCTO\n");
-				nuevo = new Node;
-				nuevo->id = 0;
-				CapturaDatos(nuevo);
-				Lista_Productos.AddNode(nuevo, 0);
-				printf("\nDatos agregados");
-				_getch();
+					//en el primer caso se agrega un producto
+				system("cls");                         //se limpia la consola
+				printf("Agregar PRODUCTO\n");          //se imprime lo que se hara que es agregar un producto
+				nuevo = new Node;                      //creamos un nuevo nodo
+				nuevo->id = 0;                         //declaramos el id de este nuevo producto en 0
+				CapturaDatos(nuevo);                   //utilizamos la funcion capturadatos para guardar el producto en el nodo nuevo
+				Lista_Productos.AddNode(nuevo, 0);     //agregamos este nodo a la lista y especificamos que fue ingresado por el usuario
+				printf("\nDatos agregados");           //confirmamos que los datos han sido guardados correctamente
+				_getch();                              //esperamos a que el usuario continue y terminamos este caso
 				break;
 			case 2:
-				system("cls");
-				printf("Buscar Producto por ID\n");
-				printf("Id: "); cin >> Temp.id;
-				aux = Lista_Productos.SearchNode(Temp.id);
-				if(aux != 0){//Si se encuentra el dato
-					printf("Datos encontrados:\n");
-					MuestraDatos(aux);
-					
-					printf("Desea:\n 0) Regresar 1) Modificar 2) Eliminar: "); cin >> opc2;
-					switch(opc2){
-						case 1: //modificar
+					//en el segundo caso buscamos productos por su ID y luego preguntamos al usuario que desea hacer con el
+				system("cls");                                //limpiamos la consola
+				printf("Buscar Producto por ID\n");           //volvemos a mencionar al usuario la opcion que selecciono
+				printf("Id: "); cin >> Temp.id;               //guardamos el Id del porducto en nuestro nodo temporal
+				aux = Lista_Productos.SearchNode(Temp.id);    //utilizando la funcion searchNode buscamos el id del producto 
+				if(aux != 0){                                 //comparamos para ver si el dato se encontro       
+					printf("Datos encontrados:\n");       //confirmamos al usuario que se encontro el dato
+					MuestraDatos(aux);                    //lo mostramos al usuario
+						
+						//ahora le preguntamos al usuario si desea simplemente volver, modificar o eliminar el dato encontrado
+					printf("Desea:\n 0) Regresar 1) Modificar 2) Eliminar: "); cin >> opc2; 
+					switch(opc2){                 
+						case 1: //en el caso que se quiera modificar se realiza lo mismo que en el caso que se requiera agregar productos
 						{
 							CapturaDatos(aux);
 							printf("El id-producto %d fue modificado\n", aux->id);
 							break;
 						}
-						case 2: //eliminar
+						case 2: //para eliminar un producto simplemente utilisamos la funcion deletenode
 						{
 							printf("El producto %s fue eliminado\n", aux->producto);
 							Lista_Productos.DeleteNode(aux);
 							_getch();
 							break;
 						}
-						default:
+						default: //en cualquier otro caso simplemente regresamos y damos las gracias
 							printf("Gracias por participar");
 							break;
 					}
