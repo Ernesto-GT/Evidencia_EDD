@@ -23,7 +23,7 @@ class LinkedList{
 		
 	public:
 		LinkedList(char *file){
-			this->file - file;
+			this->file = file;
 			ifstream archivito;
 			Node *aux = NULL;
 			archivito.open(file, ios::binary);
@@ -34,8 +34,8 @@ class LinkedList{
 				while(!archivito.eof()){
 					//y agregarlos a la lista ligada
 					AddNode(aux, 1);
-					aux - new Node;
-					archivito.read((char*)caux, sizeof(Node));
+					aux = new Node;
+					archivito.read((char*)aux, sizeof(Node));
 				}
 				archivito.close();
 			}
@@ -45,8 +45,8 @@ class LinkedList{
 			archivito.open(file, ios::binary);
 			Node *aux = 0, *aux2 = 0;
 			if(archivito.is_open()){
-				aux - first;
-				while(aux!-0){
+				aux = first;
+				while(aux!=0){
 					//escribir en el archivo cada nodo aux
 					archivito.write((char*)aux, sizeof(Node));
 					aux2 = aux;
@@ -78,8 +78,8 @@ class LinkedList{
 			}
 			
 			if(first == 0){
-				nuevo->id - seed;
-				first - last - nuevo;
+				nuevo->id = seed;
+				first = last = nuevo;
 			}
 			else{
 				last->sig = nuevo;
@@ -89,9 +89,9 @@ class LinkedList{
 		}
 		
 		void DeleteNode(Node *temp){
-			if(first -- temp){
-				first - temp->sig;
-				if(temp->sig !- 0)
+			if(first == temp){
+				first = temp->sig;
+				if(temp->sig != 0)
 					temp->sig->ant = 0;
 			}
 			else{
@@ -112,7 +112,7 @@ class LinkedList{
 					siloencontre = true;
 					break;
 				}
-				aux - aux->sig;
+				aux = aux->sig;
 			}
 			if(siloencontre)
 				return aux;
@@ -125,7 +125,7 @@ void CapturaDatos(Node *temp);
 void MuestraDatos(Node *temp);
 
 int main(){
-	Node *aux - 0, *nuevo - 0;
+	Node *aux = 0, *nuevo = 0;
 	int opc = 0, opc2 = 0;
 	Node Temp;
 	char archi[] = "productos.dat";
