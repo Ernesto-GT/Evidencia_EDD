@@ -169,7 +169,7 @@ int main(){
 				printf("Id: "); cin >> Temp.id;               //guardamos el Id del porducto en nuestro nodo temporal
 				aux = Lista_Productos.SearchNode(Temp.id);    //utilizando la funcion searchNode buscamos el id del producto 
 				if(aux != 0){                                 //comparamos para ver si el dato se encontro       
-					printf("Datos encontrados:\n");       //confirmamos al usuario que se encontro el dato
+					printf("Datos encontrados:\n");       //si el dato es encontrado confirmamos al usuario que se encontro el dato
 					MuestraDatos(aux);                    //lo mostramos al usuario
 						
 						//ahora le preguntamos al usuario si desea simplemente volver, modificar o eliminar el dato encontrado
@@ -193,39 +193,43 @@ int main(){
 							break;
 					}
 				}
-				else
+					//en caso que el dato no haya sido encontrado se mostrara al usuario el mensaje y se terminara el caso
+				else    
 					printf("Dato NO Encontrado");
 				_getch();
 				break;
 			case 3:
-				system("cls");
-				printf("ID\tPRODUCTO\t\tPRECIO\t\tCATEGORIA\n");
-				aux = Lista_Productos.getFirst();
-				while(aux != 0){
-					printf("%d\t%s\t\t%10.2lf\t\t%s\n",aux->id, aux->producto, aux->precio, aux->categoria);
-					aux = aux->sig;
-				}
-				_getch();
-				break;
+					//en el caso 3 se muestra la lista de productos
+				system("cls");                                                                                      //primero limpiamos la consola
+				printf("ID\tPRODUCTO\t\tPRECIO\t\tCATEGORIA\n");                                                    //Luego le damos formato a lo que mostraremos
+				aux = Lista_Productos.getFirst();                                                                   //utilizamos la variable aux para iterar la lista
+				while(aux != 0){                                                                                    //mientras no llegemos al final de la lista realizaremos lo sigueinte
+					printf("%d\t%s\t\t%10.2lf\t\t%s\n",aux->id, aux->producto, aux->precio, aux->categoria);    //mostraremos el producto, el precio y la categoria de cada producto
+					aux = aux->sig;                                                                             //pasamos al siguiente nodo para imprimir el siguiente producto
+				} 
+				_getch();                                                                                           //una vez terminado esperamos a que el usuario continue
+				break;                                                                                              //terminamos el caso
 			case 4:
-				break;
+					//para el caso 4 se realiza una busqueda por producto pero de este caso en adelante no esta terminado
+				break;  //terminamos el caso 
 		}
-	
-	}while(opc<7);
+		
+	}while(opc<7); //mientras siguamos eligiendo una opcion valida en el menu continuaremos con el programa hasta que ingresemos uno distinto
 	
 	printf("\a");
-	_getch();
+	_getch();     //esperamos a que el usuario continue para finalizar el codigo
 }
 
+	//Para las siguientes dos funciones, su cabezera fue declarada anteriormente, esta primera sirve para capturar los datos de un producto y usa como parametro un nodo
 void CapturaDatos(Node *temp){
-	cout << "Producto: "; 	cin >> temp->producto;
-	cout << "Precio: ";		cin >> temp->precio;
-	cout << "Categoria: ";	cin >> temp->categoria;
+	cout << "Producto: "; 	cin >> temp->producto;          //se ingresa y se guarda el nombre del producto
+	cout << "Precio: ";		cin >> temp->precio;    //se ingresa y se guarda el precio del producto
+	cout << "Categoria: ";	cin >> temp->categoria;         //y por ultimo se ingresa y se guarda la categoria del producto y termina el uso de la función
 }
-
+	//por ultimo tenemos esta funcion que muestra los datos de un nodo en especifico y utiliza como parametro un nodo de igual manera
 void MuestraDatos(Node *temp){
-	//printf("Id:\t%d\n",			temp->id);
-	printf("Producto:\t%s\n",	temp->producto);
-	printf("Precio:\t%10.2lf\n",	temp->precio);
-	printf("Categoria:\t%s\n", temp->categoria);
+	//printf("Id:\t%d\n",			temp->id);   //primero mostramos el ID del producto
+	printf("Producto:\t%s\n",	temp->producto);     //despues mostramos el nombre del producto
+	printf("Precio:\t%10.2lf\n",	temp->precio);       //luego mostramos el precio del producto
+	printf("Categoria:\t%s\n", temp->categoria);         //y por ultimo mostramos la categoria del producto y con eso termina el uso de la función
 }
