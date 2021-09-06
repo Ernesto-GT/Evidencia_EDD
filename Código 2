@@ -1,11 +1,12 @@
-#include <iostream>
-#include <fstream>
-#include <conio.h>
+//Programa que enlista productos de un supermercado con sus precios, tipo y código identificador
+#include <iostream>	//Librería para datos de entrada y salida
+#include <fstream>	//Librería para formato de entradas y salidas
+#include <conio.h>	//Para utilizar comandos de memoria dinámica
 
 using namespace std;
 
 struct Node{
-	int 	id;
+	int 	id; 
 	char 	producto[30];
 	double 	precio;
 	char	categoria[20];
