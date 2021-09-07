@@ -101,7 +101,10 @@ void lista::Mostrar()
    
    aux = primero;
    while(aux) {
-      cout << aux->valor << "-> ";
+      cout << aux->valor;
+      if(aux->siguiente){
+      	cout << "-> ";
+	  }
       aux = aux->siguiente;
    }
    cout << endl;
@@ -132,6 +135,9 @@ int main()
    Lista.Insertar(10);
    Lista.Insertar(40);
    Lista.Insertar(30);
+   Lista.Insertar(1);
+   Lista.Insertar(80);
+   Lista.Insertar(45);
 
    Lista.Mostrar();
 
