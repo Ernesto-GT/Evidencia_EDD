@@ -1,7 +1,7 @@
 // Programa en C++ que organiza en una lista de menor a mayor los elementos que se le inserten
 
-#include <iostream>	//Libreriía básica de C++
-using namespace std;	//Usado para dar formato a las entradas y salidas del programa
+#include <iostream> //libreria necesaria para los procesos del programa
+using namespace std;//Usado para dar formato a las entradas y salidas del programa
 
 //Declaración de la clase nodo para agregar estos a la lista principal
 class nodo {
@@ -19,7 +19,7 @@ class nodo {
    friend class lista;	//Se incluye dentro de esta clase todos los métodos que se declaren dentro de la clase lista
 };
 
-typedef nodo *pnodo;	//Puntero que se usará para declarar punteros a nodos
+typedef nodo *pnodo; //creacion de un sinonimo del tipo de dato nodo
 
 //Comienza la clase lista, la cual anteriormente se mencionó que se incluía en la clase nodo
 class lista {
@@ -55,18 +55,17 @@ lista::~lista()	//Se le da un override al método declarado anteriormente en la 
    actual = NULL;	//Se declara actual como nulo para que esté vacía
 }
 
-void lista::Insertar(int v)	//Inicio de la función para insertar elementos
+//funcion para insertar un elemento en la lista
+void lista::Insertar(int v)
 {
-   pnodo anterior;	//Se declara un nodo para guardar el elemento anterior por si hace falta
- 	
- 	//Se realiza esta acción en dado caso que el elemento a insertar sea el primero
-   // Si la lista está vacía
-   if(ListaVacia() || primero->valor > v) {
+   pnodo anterior; // creacion de un nodo auxiliar llamado anterior
+ 
+   if(ListaVacia() || primero->valor > v) { // si la lista esta vacia, o el valor a ingresar el mayor al primero, entonces: 
       // Asignamos a lista un nuevo nodo de valor v y
       // cuyo siguiente elemento es la lista actual                    
       primero = new nodo(v, primero);
    }
-   else {	//En dado caso que a la lista se le quiera insertar otro valor que no sea el primero
+   else { //En dado caso que a la lista se le quiera insertar otro valor que no sea el primero
       // Buscar el nodo de valor menor a v 
       anterior = primero;
       // Avanzamos hasta el último elemento o hasta que el siguiente tenga 
@@ -79,19 +78,19 @@ void lista::Insertar(int v)	//Inicio de la función para insertar elementos
    }
 }
 
-//Función para borrar elementos de la lista
+//funcion para borrar algun elemento de la lista
 void lista::Borrar(int v)
 {
-   pnodo anterior, nodo;	//Se generan nodos auxiliares que ayudan con esta operación
+   pnodo anterior, nodo; //creamos las variables necesarias para la funcion
    
-   nodo = primero;	//Se posiciona uno de los nodos auxiliares en la cabecera de la lista
-   anterior = NULL;	//El antrior por estos momentos no existe porque no hay nodo anterior al primero
-   while(nodo && nodo->valor < v) {	//Se verifica que la lista no llegue al fin y se busca si el valor del nodo actual es mayor al buscado
-      anterior = nodo; //Si no se ha llegado al final o al valor buscado se moverá de posición a través de la lista
-      nodo = nodo->siguiente;
+   nodo = primero; //hacemos que nodo apunte a primero
+   anterior = NULL; //hacemos que anterior apunte a NULL
+   while(nodo && nodo->valor < v) { //mientras que la lista no llegue al fin y se busca si el valor del nodo actual es mayor al buscado
+      anterior = nodo; //hacemos que anterior apunte a nodo
+      nodo = nodo->siguiente; //y hacemos que nodo apunte al nodo siguiente 
    }
-   if(!nodo || nodo->valor != v) return;	//Si se llegó al final de la lista o el valor insertado no coincide con ninguno, se termina la función
-   else { // Borrar el nodo 	//Sí se encontro el valor que se buscaba
+   if(!nodo || nodo->valor != v) return; //Si se llegó al final de la lista o el valor insertado no coincide con ninguno, se termina la función
+    else { // Borrar el nodo 	//Sí se encontro el valor que se buscaba
       if(!anterior) // Primer elemento 
          primero = nodo->siguiente; //Simplemente se "olvida" su espacio en memoria
       else  // un elemento cualquiera
@@ -100,75 +99,78 @@ void lista::Borrar(int v)
    }   
 }
 
-void lista::Mostrar()	//Se muestran los elementos de la lista con esta función
+//funcion para mostrar todos los elementos de la lista
+void lista::Mostrar()
 {
-   nodo *aux;	//Se genera un nodo auxiliar
+   nodo *aux; //creamos un nodo auxiliar 
    
-   aux = primero;	//Se posiciona el auxiliar al principio de la lista
-   while(aux) {	//Mientras que no se llegue al final de la lista..
-      cout << aux->valor;	//Se imprimirá el valor del nodo actual donde se está posicionando
-      if(aux->siguiente){	//Si sí hay nodo siguiente...
-      	cout << "-> ";	//Se imprime una flecha meramente para visualizar la lista
-	  }
-      aux = aux->siguiente;	//Se manda el nodo auxilar al siguiente elemento para que repita el bucle hasta llegar al fin de la lista 
+   aux = primero; //hacemos que aux apunte a primero
+   while(aux) { //mientras que aux sea dif. de NULL, entra al ciclo
+      cout << aux->valor << "-> "; //se imprime en pantalla el valor del nodo aux
+      aux = aux->siguiente; // hacemos que aux apunte al nodo siguiente
    }
-   cout << endl;	//Salto de linea
+   cout << endl; //salto de linea
 }
 
-void lista::Siguiente()	//Comienza la función para moverse al siguiente nodo
+//funcion para que actual apunte al siguiente elemento de la lista
+void lista::Siguiente()
 {
-   if(actual) actual = actual->siguiente;	//Si el nodo actual no es igual a nulo, se mueve al siguiente
+   if(actual) actual = actual->siguiente; //si actual es dif. de NULL, entra al condicional, y hacemos que actual apunte al nodo siguiente 
 }
 
-void lista::Primero()	//Método para posicionarse en el primer elemento
+//funcion para que actual apunte a primero;
+void lista::Primero()
 {
-   actual = primero;	//Se iguala el nodo actual al primero de la lista
+   actual = primero; //hacemos que actual apunte a primero
 }
 
-void lista::Ultimo()	//Método para moverse al último de la lista
+//funcion para que actual apunte al ultimo elemento de la lista
+void lista::Ultimo()
 {
-   actual = primero;  //Se posiciona en el primer elemento
-   if(!ListaVacia()) 	//Se verifica que la lista no esté vacía con el método conrrespondiente
-      while(actual->siguiente) Siguiente();	//Si existe un nodo siguiente, se llama al método con el mismo nombre para que se pueda mover a través de la lista
+   actual = primero;  //hacemos que actual apunte a primero
+   if(!ListaVacia()) //si la lista no esta vacia entra al condicional
+      while(actual->siguiente) Siguiente(); //mientras que actual->siguiente sea dif. de NULL, se ingresa a la funcion Siguiente();
 }
 
-//Función principal del programa
-int main()
+int main()//clase main para ejecutar el programa
 {
-   lista Lista;	//Se genera una lista
-
-	//Elementos que se insertarán en la lista
-   Lista.Insertar(20);
-   Lista.Insertar(10);
+   lista Lista; //objeto para poder ingresar a las funciones de la clase lista
+   
+   //llamamos a la funcion lista.Insertar, para asignar los valores 20, 10, 40 y 30 a la lista 
+   Lista.Insertar(20); 
+   Lista.Insertar(10); 
    Lista.Insertar(40);
    Lista.Insertar(30);
-   Lista.Insertar(1);
-   Lista.Insertar(80);
-   Lista.Insertar(45);
 
-   Lista.Mostrar();	//Se llama al método para mostrar la lista
-
-   cout << "Lista de elementos:" << endl;	//Formato para la lista
-   Lista.Primero();	//Se posiciona nuestro apuntador al principio de la lista usando el método correspondiente
-   while(Lista.Actual()) {	//Se verifica que el nodo actual exista no valiendo igual a NULL
-      cout << Lista.ValorActual() << endl;	//Se imprime la lista de manera vertical
-      Lista.Siguiente();	//Función para moverse al siguiente nodo
-   }
-   Lista.Primero();	//Para posicionarse al principio de la lista
-   cout << "Primero: " << Lista.ValorActual() << endl;	//Imprime el primer elemento
-   
-   Lista.Ultimo();	//Se posiciona al último de la lista
-   cout << "Ultimo: " << Lista.ValorActual() << endl;	//Imprime el último elemento de la lista
-   
-   //Se eliminan todos estos elementos de la lista
-   Lista.Borrar(10);
-   Lista.Borrar(15);
-   Lista.Borrar(45);
-   Lista.Borrar(30);
-   Lista.Borrar(40);
-   //Se vuelve a mostrar la lista
+	//llamamos a la funcion Lista.Mostrar, para poder ver los elementos que contiene la lsita actualmente
    Lista.Mostrar();
 
-   cin.get();	//Para que aguarde el programa hasta presionar una tecla
-   return 0;
+	//ciclo para enlistar los elementos de la lista
+   cout << "Lista de elementos:" << endl;
+   Lista.Primero(); //llamamos a la funcion Lista.Primero, para hacer que actual apunte al primer elemento
+   while(Lista.Actual()) { //evaluamos utilizando la funcion Lista.Actual, que es "mientras actual sea dif. de NULL, entra al ciclo
+      cout << Lista.ValorActual() << endl; //imprimimos en pantalla el valor de actual
+      Lista.Siguiente(); //hacemos que actual apunte al siguiente elemento 
+   }
+   
+   //llamamos a la funcion Lista.Primero
+   Lista.Primero();
+   cout << "Primero: " << Lista.ValorActual() << endl; //imprimimos en pantalla el primer elemento de la lista
+   
+   //llamamos a la funcion Lista.Ultimo
+   Lista.Ultimo();
+   cout << "Ultimo: " << Lista.ValorActual() << endl; //imprimimos en pantalla el ultimo elemento de la lista 
+   
+   //llamamos a la funcion Lista.Borrar, para eliminar los elementos 10, 15, 45, 30 y 40
+   Lista.Borrar(10); // 10 si exite en la lista, se elimina
+   Lista.Borrar(15); // 15 no existe en la lista, no pasa nada
+   Lista.Borrar(45); // 45 no existe en la lista, no pasa nada
+   Lista.Borrar(30); // 30 si exite en la lista, se elimina
+   Lista.Borrar(40); // 40 si exite en la lista, se elimina
+   
+   	//llamamos a la funcion Lista.Mostrar, para poder ver los elementos que contiene la lsita actualmente
+   Lista.Mostrar();
+
+   cin.get(); // funcion para esperar a que el usuario presione una tecla para terminar el programa
+   return 0; //fin del programa
 }
